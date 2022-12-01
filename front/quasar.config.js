@@ -18,8 +18,8 @@ module.exports = configure(function (/* ctx */) {
       // include = [],
       // exclude = [],
       // rawOptions = {},
-      warnings: true,
-      errors: true
+      warnings: false,
+      errors: false
     },
 
     // https://v2.quasar.dev/quasar-cli/prefetch-feature
@@ -29,7 +29,6 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-
       'axios'
     ],
 
@@ -40,14 +39,6 @@ module.exports = configure(function (/* ctx */) {
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
-      // 'ionicons-v4',
-      // 'mdi-v5',
-      // 'fontawesome-v6',
-      // 'eva-icons',
-      // 'themify',
-      // 'line-awesome',
-      // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
       'roboto-font', // optional, you are not bound to it
       'material-icons' // optional, you are not bound to it
     ],
@@ -63,50 +54,16 @@ module.exports = configure(function (/* ctx */) {
       alias: {
         services: path.join(__dirname, './src/services')
       }
-      // vueRouterBase,
-      // vueDevtools,
-      // vueOptionsAPI: false,
-
-      // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
-
-      // publicPath: '/',
-      // analyze: true,
-      // env: {},
-      // rawDefine: {}
-      // ignorePublicFolder: true,
-      // minify: false,
-      // polyfillModulePreload: true,
-      // distDir
-
-      // extendViteConf (viteConf) {},
-      // viteVuePluginOptions: {},
-
-      // vitePlugins: [
-      //   [ 'package-name', { ..options.. } ]
-      // ]
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
       open: true // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {},
-
-      // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en-US', // Quasar language pack
-
-      // For special cases outside of where the auto-import strategy can have an impact
-      // (like functional components as one of the examples),
-      // you can manually specify Quasar components/directives to be available everywhere:
-      //
-      // components: [],
-      // directives: [],
-
-      // Quasar plugins
       plugins: []
     },
 

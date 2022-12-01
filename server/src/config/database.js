@@ -1,5 +1,10 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-mongoose.connect("mongodb://localhost:27017/ynov-pwa")
-  .then(() => console.log('✅ Successfully connected to the database'))
-  .catch((e) => console.log(`⛔️ Error during database connection ${e}`))
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log("✅ Connected to database");
+    })
+    .catch((err) => {
+        console.log("⛔ Error connecting to database");
+        console.log(err);
+    });
