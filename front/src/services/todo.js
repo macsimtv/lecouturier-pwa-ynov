@@ -13,3 +13,24 @@ export const getTodos = async (listId) => {
 
   return []
 }
+
+export const createTodo = async (todo) => {
+  const res = await api.post('/todo', todo)
+
+  if (res.status === 201) {
+    return res.data
+  }
+
+  return null
+}
+
+export const deleteTodo = async (todoId) => {
+  const res = await api.delete(`/todo/${todoId}`)
+  console.log(res)
+
+  if (res.status === 204) {
+    return true
+  }
+
+  return null
+}

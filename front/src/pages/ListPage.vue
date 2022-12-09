@@ -1,9 +1,9 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { getList } from '../services/list'
-import { getTodos } from '../services/todo'
+import { getTodos, createTodo as apiCreateTodo } from '../services/todo'
 
 import TodoItem from '../components/TodoItem.vue'
 
@@ -11,7 +11,9 @@ const route = useRoute()
 
 const listId = ref(route.params.id)
 const listName = ref('Loading...')
-const listTodos = ref([]);
+const listTodos = ref([])
+const isModalOpen = ref(false)
+const newTodoName = ref('');
 
 (async () => {
   const resList = await getList(listId.value)
@@ -19,6 +21,35 @@ const listTodos = ref([]);
   const resTodos = await getTodos(listId.value)
   listTodos.value = resTodos
 })()
+
+const notCompletedTodo = computed(() => {
+  return listTodos.value.filter(todo => todo.completed === false)
+})
+
+const completedTodo = computed(() => {
+  return listTodos.value.filter(todo => todo.completed === true)
+})
+
+const closeModal = () => {
+  isModalOpen.value = false
+}
+
+const openModal = () => {
+  isModalOpen.value = true
+}
+
+const createTodo = async () => {
+  const resCreatedTodo = await apiCreateTodo({
+    title: newTodoName.value,
+    list_id: listId.value
+  })
+
+  if (resCreatedTodo) {
+    listTodos.value.push(resCreatedTodo)
+    newTodoName.value = ''
+    closeModal()
+  }
+}
 </script>
 
 <template>
@@ -40,11 +71,50 @@ const listTodos = ref([]);
                 </div>
             </div>
             <div class="todos">
-                <TodoItem class="todo" v-for="todo of listTodos" :key="todo._id" :todo="todo" />
+                <h2 class="title">
+                    🔴 Todos - {{ notCompletedTodo.length }}
+                </h2>
+                <template v-if="notCompletedTodo.length">
+                    <TodoItem class="todo" v-for="todo of notCompletedTodo" :key="todo._id" :todo="todo" />
+                </template>
+                <p v-else class="todos__info">
+                    No todos yet
+                </p>
+            </div>
+            <div class="todos">
+                <h2 class="title">
+                    🟢 Todos - {{ completedTodo.length }}
+                </h2>
+                <template v-if="completedTodo.length">
+                    <TodoItem class="todo" v-for="todo of completedTodo" :key="todo._id" :todo="todo" />
+                </template>
+                <p v-else class="todos__info">
+                    No completed todos
+                </p>
             </div>
             <div class="add-todo">
                 <div class="add-todo__container">
-                    <q-icon class="add-todo__icon" name="add" />
+                    <q-icon class="add-todo__icon" name="add" @click="openModal" />
+                </div>
+            </div>
+        </div>
+        <div v-show="isModalOpen" class="modal-add-todo">
+            <div class="modal-add-todo__container">
+                <div class="modal-add-todo__header">
+                    <div class="modal-add-todo__icon-container">
+                        <q-icon @click="closeModal" class="modal-add-todo__icon" name="close" />
+                    </div>
+                    <h1 class="modal-add-todo__title">
+                        Add todo
+                    </h1>
+                </div>
+                <div class="modal-add-todo__body">
+                    <div class="modal-add-todo__input-container">
+                        <q-input class="modal-add-todo__input" placeholder="Todo name" v-model="newTodoName" />
+                    </div>
+                </div>
+                <div class="modal-add-todo__footer">
+                    <q-btn @click="createTodo" class="modal-add-todo__btn" label="Add" />
                 </div>
             </div>
         </div>
@@ -77,6 +147,7 @@ const listTodos = ref([]);
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    color: #666666;
                     font-size: 30px;
                     text-decoration: none;
                 }
@@ -95,6 +166,12 @@ const listTodos = ref([]);
         flex-direction: column;
         gap: 10px;
         margin-top: 30px;
+    }
+
+    .todos__info {
+        font-size: 1.2rem;
+        color: #757575;
+        text-align: center;
     }
 
     .todo {
@@ -129,7 +206,77 @@ const listTodos = ref([]);
         }
     }
 
+    .title {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
     .frame {
         padding-bottom: 100px;
+    }
+
+    .modal-add-todo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        .modal-add-todo__container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            .modal-add-todo__header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .modal-add-todo__title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                }
+                .modal-add-todo__icon-container {
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #F2F2F2;
+                    border-radius: 4px;
+                    .modal-add-todo__icon {
+                        color: #757575;
+                        font-size: 30px;
+                    }
+                }
+            }
+            .modal-add-todo__body {
+                margin-top: 20px;
+                .modal-add-todo__input-container {
+                    .modal-add-todo__input {
+                        border: 1px solid #F2F2F2;
+                        border-radius: 4px;
+                        padding: 10px;
+                        font-size: 1rem;
+                        width: 100%;
+                    }
+                }
+            }
+            .modal-add-todo__footer {
+                margin-top: 20px;
+                .modal-add-todo__btn {
+                    width: 100%;
+                    background: linear-gradient(125.54deg, #613973 -0.39%, #BB46E4 100%);
+                    color: #fff;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    border-radius: 4px;
+                }
+            }
+        }
     }
 </style>

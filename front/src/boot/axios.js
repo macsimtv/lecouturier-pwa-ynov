@@ -8,6 +8,7 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({ baseURL: 'http://localhost:5000/api/v1' })
+// const api = axios.create({ baseURL: 'https://todo-api.zib8zc.easypanel.host/api/v1' })
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api

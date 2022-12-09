@@ -30,3 +30,23 @@ export const createList = async (list) => {
     return null
   }
 }
+
+export const deleteList = async (id) => {
+  const res = await api.delete(`/list/${id}`)
+
+  if (res.status === 204) {
+    return true
+  } else {
+    return false
+  }
+}
+
+export const updateList = async (id, list) => {
+  const res = await api.put(`/list/${id}`, list)
+
+  if (res.status === 200) {
+    return res.data
+  } else {
+    return null
+  }
+}

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 
-import { updateTodo } from '../services/todo'
+import { updateTodo, deleteTodo } from '../services/todo'
 
 const props = defineProps({
   todo: {
@@ -14,6 +14,14 @@ const checked = ref(props.todo.completed)
 
 const toggle = () => {
   checked.value = !checked.value
+}
+
+const onDelete = async () => {
+  const deletedTodo = await deleteTodo(props.todo._id)
+
+  if (deletedTodo) {
+    window.location.reload()
+  }
 }
 
 watch(checked, (val) => {
@@ -31,6 +39,9 @@ watch(checked, (val) => {
             </div>
             <div class="todo__content">
                 <label @click="toggle">{{ todo.title }}</label>
+            </div>
+            <div @click="onDelete" class="todo__delete">
+                <q-icon name="delete" />
             </div>
         </div>
     </div>
@@ -75,6 +86,16 @@ watch(checked, (val) => {
                     text-decoration: line-through;
                     color: #BDBDBD;
                 }
+            }
+        }
+        .todo__delete {
+            background-color: #ce2626;
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+            .q-icon {
+                font-size: 20px;
+                color: #fff;
             }
         }
     }
