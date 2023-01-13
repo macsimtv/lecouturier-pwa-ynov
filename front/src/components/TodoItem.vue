@@ -7,6 +7,10 @@ const props = defineProps({
   todo: {
     type: Object,
     required: true
+  },
+  showButtons: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -40,7 +44,7 @@ watch(checked, (val) => {
             <div class="todo__content">
                 <label @click="toggle">{{ todo.title }}</label>
             </div>
-            <div @click="onDelete" class="todo__delete">
+            <div v-if="props.showButtons" @click="onDelete" class="todo__delete">
                 <q-icon name="delete" />
             </div>
         </div>

@@ -13,6 +13,10 @@ const props = defineProps({
     default: () => ({
       title: 'Loading...'
     })
+  },
+  showButtons: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -65,7 +69,7 @@ const onEdit = async () => {
                 </div>
             </div>
             <div v-if="todos.length" class="list__body">
-                <TodoItem v-for="todo of todos.slice(0, 3)" :key="todo._id" :todo="todo" />
+                <TodoItem v-for="todo of todos.slice(0, 3)" :key="todo._id" :todo="todo" :showButtons="props.showButtons" />
             </div>
             <p class="list__empty" v-else>
                 Cette liste ne contient aucune tâche.<br>

@@ -44,7 +44,7 @@ const closeModal = () => {
         </h2>
       </div>
       <div class="lists">
-        <TodoList :list="list" v-for="list of lists" :key="list._id" />
+        <TodoList :list="list" v-for="list of lists" :key="list._id" :showButtons="false" />
       </div>
     </div>
     <NavigationBar @open:modal:list:add="openModal" />
